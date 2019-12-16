@@ -8,6 +8,21 @@
 
 import Foundation
 
+func matches(for regex: String, in text: String) -> [String] {
+
+    do {
+        let regex = try NSRegularExpression(pattern: regex)
+        let results = regex.matches(in: text,
+                                    range: NSRange(text.startIndex..., in: text))
+        return results.map {
+            String(text[Range($0.range, in: text)!])
+        }
+    } catch let error {
+        print("invalid regex: \(error.localizedDescription)")
+        return []
+    }
+}
+
 print("Hello, World!")
 
 let task = Process()
@@ -34,6 +49,9 @@ if error.count > 0 {
     print("error output:")
     print(error)
 }
+
+let matched = matches(for: "\"(.*?)\"",in: output)
+print(matched[1].replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil))
 
 // Filter with Regex "(.*?)"
 
